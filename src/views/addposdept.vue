@@ -18,17 +18,15 @@
                 <form @submit.prevent= "">
                   <div class="form-row">
                     <div class="form-group col-md-6" >
-                      <label  class="control-label" for="employee_id"> Department</label>
+                      <label  class="control-label" for="dept"> Department</label>
                        <validation-provider rules="required" v-slot="{errors}">
                       <input
                         type="text"
-                        name="employee_id"
-                       
+                        name="dept"
+                        v-model="dept"
                         class="form-control"
-                       
-                 
-                   
-                        placeholder="Position"
+
+                        placeholder="Department"
                       
                       />
                         <span style="color: red;">{{errors[0]}}</span>
@@ -36,12 +34,12 @@
                       
                     </div>
                     <div class="form-group col-md-6">
-                      <label class="control-label" for="fullname">Position</label>
+                      <label class="control-label" for="position">Position</label>
                       <validation-provider rules="required" v-slot="{errors}">
                       <input
                         type="text"
                         class="form-control"
-                     
+                     v-model="position"
                         required
                         placeholder="Position"
                         
@@ -113,6 +111,94 @@
           </div>
         </div>
       </div>
+
+
+      <div class="container-fluid">
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card spur-card">
+             
+              <div class="card-body ">
+                         <div class="input-group">
+      <input type="text" id="myInput" class="form-control" size="40" placeholder="Filter">
+       </div>
+               <br/>
+     <table class="table table-bordered "  >
+
+    <thead>
+      <tr>
+        <!-- <th>Employee ID</th>
+        <th>Department</th> -->
+        <th>Department</th>
+        <th> Position</th>
+
+
+      </tr>
+    </thead>
+    <tbody id="myTable">
+      <tr v-for="posdepts in posdept"
+                    v-bind:key="posdepts.id">
+      <td>
+          {{ posdepts.dept }}
+
+      </td>
+
+        <!-- <td>{{ posdepts.position }}</td> -->
+
+
+
+        <!-- <td>{{employee.position}}</td>
+         -->
+        <td><span class="badge badge-pill badge-default">{{
+                      posdepts.position
+                    }}</span>
+        <!-- <router-link
+                    class="float-right"
+
+                      v-bind:to="{
+                        name: 'viewemployee',
+                        params:{employee_id: employee.employee_id}
+
+                      }"
+                    >
+                      <i class="fa fa-eye"></i>
+                    </router-link> -->
+                   </td>
+      </tr>
+
+    </tbody>
+    </table>
+   
+  
+
+<!-- 
+                <ul class="list-group">
+                  <li
+                    v-for="employee in employees"
+                    v-bind:key="employee.id"
+                    class="list-group-item"
+                  >
+                    <span class="badge badge-pill badge-primary">{{
+                      employee.position
+                    }}</span>
+
+                    {{ employee.employee_id }}:{{ employee.fullname }}: {{employee.dept}}
+
+
+                  </li>
+                </ul> -->
+               <br/>
+                <!-- <button type="submit" @click="moveto()" class="btn btn-primary">Add Employee</button> -->
+
+                <!-- <button type="button" @click="moveto()" class="btn btn-outline-success float-right"><i class="fas fa-plus"></i>Add Employee</button> -->
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+ 
     </main>
   </div>
 </template>
@@ -121,10 +207,12 @@
 import { ValidationProvider, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 import { ValidationObserver } from 'vee-validate';
-// import db from "../components/firebaseInit";
+
+import db from '../components/firebaseInit';
 import Loading from "vue-loading-overlay";
 // import * as VeeValidate from "vee-validate"
-// import toast from "@/store/modules/toast"; 
+ import toast from "@/store/modules/toast"; 
+import $ from 'jquery';
 
 // import users from "../store/modules/users"
 
@@ -147,27 +235,77 @@ export default  {
   },
   
  data() {
-    return {
+ return {
      
+      dept: null, 
+      position: null,
        isLoading: false,
-
+        loadingIconColor:"#00b8d0",
+        posdept: []
     }
-    
   },
   
   methods:{
 
   onSubmit() {
 
-this.isLoading= true;
+// console.log(
+//       `login details =username= ${this.employee_id} and password= ${this.fullname}`
+//     );
+    this.isLoading = true;
+
+    db.collection("posdept")
+      .add({
+      
+        dept: this.dept,
+        position: this.position
+      })
+      .then(() => {
+           toast.success("Created Successfully", "Success", 3000);
+        this.$router.push("/app/employeelist");
+     
+        this.isLoading = false;
+      })
+    
+      .catch(err => {
+        console.error(err);
+        toast.error("Something went wrong!!", "Error", 3000);
+
+       // alert("Invalid details, please try again ");
+      });
   
   }
 
   },
   created() {
-      this.isLoading= true;
+    this.isLoading= true;
+    db.collection("posdept")
+     .orderBy('position')
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          const data = {
+           
+            dept: doc.data().dept,
+            position: doc.data().position
+          };
+          this.posdept.push(data);
+          this.isLoading = false
+        });
+      });
+   
 
   },
+  mounted() {
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+    
+
+    }
 
 }
 </script>
