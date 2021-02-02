@@ -12,6 +12,9 @@ import employeelist from "./views/employeelist.vue";
 import addposdept from "./views/addposdept.vue";
 import Editemployee from "./views/Editemployee.vue";
 import viewemployee from "./views/viewemployee.vue";
+import ForgotPassword from "./views/ForgotPassword.vue";
+
+
 
 Vue.use(Router);
 
@@ -26,12 +29,7 @@ const router = new Router({
 
       component: Login
     },
-     {
-       path: '/login',
-      name: 'Login',
-       component: Login,
-      
-     },
+    
     {
       path: '/signup',
       name: 'Signup',
@@ -42,6 +40,12 @@ const router = new Router({
 
       component: NotFound
     },
+    {
+      path: '/forgot-password',
+      name: 'ForgotPassword',
+      component: ForgotPassword
+    },
+    
 
     {
       path: '/app',

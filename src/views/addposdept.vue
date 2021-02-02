@@ -137,10 +137,10 @@
       </tr>
     </thead>
     <tbody id="myTable">
-      <tr v-for="posdepts in posdept"
-                    v-bind:key="posdepts.id">
+      <tr v-for="departments in department"
+                    v-bind:key="departments.id">
       <td>
-          {{ posdepts.dept }}
+          {{ departments.dept }}
 
       </td>
 
@@ -150,20 +150,20 @@
 
         <!-- <td>{{employee.position}}</td>
          -->
-        <td><span class="badge badge-pill badge-default">{{
-                      posdepts.position
+        <td> <span class="badge badge-pill badge-warning">{{
+                      departments.position
                     }}</span>
-        <!-- <router-link
+        <router-link
                     class="float-right"
 
                       v-bind:to="{
                         name: 'viewemployee',
-                        params:{employee_id: employee.employee_id}
+                        params:{dept: departments.dept}
 
                       }"
                     >
                       <i class="fa fa-eye"></i>
-                    </router-link> -->
+                    </router-link>
                    </td>
       </tr>
 
@@ -241,7 +241,7 @@ export default  {
       position: null,
        isLoading: false,
         loadingIconColor:"#00b8d0",
-        posdept: []
+        department: []
     }
   },
   
@@ -254,7 +254,7 @@ export default  {
 //     );
     this.isLoading = true;
 
-    db.collection("posdept")
+    db.collection("department")
       .add({
       
         dept: this.dept,
@@ -279,7 +279,7 @@ export default  {
   },
   created() {
     this.isLoading= true;
-    db.collection("posdept")
+    db.collection("department")
      .orderBy('position')
       .get()
       .then(querySnapshot => {
@@ -289,7 +289,7 @@ export default  {
             dept: doc.data().dept,
             position: doc.data().position
           };
-          this.posdept.push(data);
+          this.department.push(data);
           this.isLoading = false
         });
       });

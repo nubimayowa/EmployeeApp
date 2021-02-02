@@ -42,7 +42,7 @@
 
         <td>{{employee.name}}</td>
         
-        <td><span class="badge badge-pill badge-default">{{
+        <td> <span class="badge badge-pill badge-primary">{{
                       employee.position
                     }}</span>
         <router-link

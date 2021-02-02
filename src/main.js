@@ -11,7 +11,8 @@ import Loading from 'vue-loading-overlay';
 
 
 // typins and
-
+import 'bootstrap/dist/css/bootstrap.min.css'
+//import './components/css/main.css';
 import './components/css/demo.css';
 import './components/css/demo.min.css';
 import './components/css/spur.min.css';
@@ -24,7 +25,7 @@ import './components/js/spur.js';
 import 'vue-loading-overlay/dist/vue-loading.css';
 
 
-import '../node_modules/bootstrap/dist/css/bootstrap.css';
+//import '../node_modules/bootstrap/dist/css/bootstrap.css';
 //import '../node_modules/font-awesome/css/font-awesome.css';
 import '../node_modules/izitoast/dist/css/iziToast.css';
 import '../node_modules/izitoast/dist/css/iziToast.min.css';

@@ -153,6 +153,7 @@ export default  {
     ValidationProvider,
     ValidationObserver
   },
+
   
  data() {
     return {
@@ -160,8 +161,6 @@ export default  {
       name: null,
       dept: null, 
       position: null,
-      
-     
        isLoading: false,
         loadingIconColor:"#00b8d0"
     }

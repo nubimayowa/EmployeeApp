@@ -81,6 +81,7 @@
                     <button type="submit" class="searchbox-submit"> <i class="fas fa-search"></i> </button>
                     <input type="text" class="searchbox-input" placeholder="type to search">
                 </form>
+                 <p>{{user.email}}</p>
                 <p class="tools-item"></p>
                 <div class="tools">
                     <a href="https://github.com/HackerThemes/spur-template" target="_blank" class="tools-item">
@@ -97,7 +98,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu1">
                             <a class="dropdown-item" href="#!">Profile</a>
-                            <a class="dropdown-item" >Logout</a>
+                            <a @click="logout()" class="dropdown-item" >Logout</a>
                            
                               <!-- <a class="dash-nav-dropdown-item"> <router-link to="/app/employeelist">Employee list </router-link></a> -->
                         </div>
@@ -229,10 +230,7 @@
 </template>
 
 <script>
-
-
-
-// import firebase from 'firebase'
+import firebase from 'firebase'
 // import db from "../components/firebaseInit";
 // import Loading from "vue-loading-overlay";
 // import toast from '@/store/modules/toast';
@@ -242,36 +240,39 @@ export default {
   name: "MainApp",
   data() {
     return {
-        
-      
+        user: null
 
-    }
+    };
   },
    computed:{
 
 
   },
+  created(){
+       firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.user = user;
+      } else {
+        this.user = null;
+      }
+    });
 
-
-
-
-
-  
+  },
 
    methods: {
     
+     logOut() {
+      firebase.auth().signOut().then(() => {
+        firebase.auth().onAuthStateChanged(() => {
+          this.$router.push('/')
+        })
+      })
+    }
   }
-
-
   }
-
-
- 
-
+  
 
 </script>
-
-
 
 <style scoped>
 
